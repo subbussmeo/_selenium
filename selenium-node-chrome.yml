@@ -20,7 +20,7 @@ spec:
           medium: Memory
       containers:
       - name: selenium-node-chrome
-        image: selenium/node-chrome-debug:3.141.59-20210311
+        image: subbu7898/selenium:node-crome
         ports:
           - containerPort: 5900
             #  hostPort: 5901
