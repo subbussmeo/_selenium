@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Copyright 2019 Red Hat, Inc.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+FIREFOX_VERSION=$( firefox -version | cut -d " " -f 3 )
+DRIVER_LOGLEVEL=${DRIVER_LOGLEVEL:-info}
+
+if [[ "${GRID_DEBUG}X" == "X" ]]; then
+  export GRID_DEBUG="false"
+fi
+
+cat <<_EOF
+{
+  "capabilities": [
+    {
+      "version": "$FIREFOX_VERSION",
+      "browserName": "firefox",
+      "maxInstances": $NODE_MAX_INSTANCES,
+      "seleniumProtocol": "WebDriver",
+      "applicationName": "$NODE_APPLICATION_NAME",
+      "moz:firefoxOptions":
+        {
+          "log":
+            {
+              "level": "$DRIVER_LOGLEVEL"
+            }
+        }
+    }
+  ],
+  "proxy": "org.openqa.grid.selenium.proxy.DefaultRemoteProxy",
+  "maxSession": $NODE_MAX_SESSION,
+  "host": "$NODE_HOST",
+  "port": $NODE_PORT,
+  "register": true,
+  "registerCycle": $NODE_REGISTER_CYCLE,
+  "nodePolling": $NODE_POLLING,
+  "unregisterIfStillDownAfter": $NODE_UNREGISTER_IF_STILL_DOWN_AFTER,
+  "downPollingLimit": $NODE_DOWN_POLLING_LIMIT,
+  "debug": $GRID_DEBUG
+}
+_EOF
